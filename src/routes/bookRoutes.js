@@ -2,7 +2,11 @@ const express = require('express');
 const bookRouter = express.Router();
 const sql = require('mssql');
 const debug = require('debug')('app:bookRoutes');
+const bookController = require('../controllers/bookController');
+const bookService = require('../services/goodReadsService');
 function router(nav) {
+  const { getIndex, getById, middleware } = bookController(nav, bookService);
+  bookRouter.use(middleware);
   const books = [{
     title: 'War and peace',
     gender: 'historical novel',
@@ -22,36 +26,9 @@ function router(nav) {
     read: false,
   }
   ];
-  bookRouter.route('/').get((req, res) => {
-    (async function query() {
-      const request = new sql.Request();
-      const result = await request.query('select * from books');
+  bookRouter.route('/').get(getIndex);
 
-      debug(result);
-      res.render('bookListView', {
-        nav,
-        title: 'Library',
-        books: result.recordset
-      });
-    }());
-  });
-
-  bookRouter.route('/:id').all((req, res, next) =>{
-    (async function query() {
-      const { id } = req.params;
-      const request = new sql.Request();
-      const { recordset } = await request.input('id', sql.Int, id)
-        .query('select * from books where id = @id');
-      [req.book] = recordset;
-      next();
-    }());
-  }).get((req, res) => {
-    res.render('bookView', {
-      nav,
-      title: 'Library',
-      book: req.book
-    });
-  });
+  bookRouter.route('/:id').get(getById);
   return bookRouter;
 }
 
