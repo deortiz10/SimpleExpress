@@ -14,16 +14,7 @@ const adminRouter = require('./src/routes/adminRoutes')(nav);
 
 app.use(morgan('tiny'));
 const config = require('./src/config')
-// const config = {
-//     user: 'library',
-//     password: 'Books123',
-//     server: 'pslibrary.database.windows.net', // You can use 'localhost\\instance' to connect to named instance
-//     database: 'PSLibrary',
-//
-//     options: {
-//         encrypt: true // Use this if you're on Windows Azure
-//     }
-// }
+
 
 sql.connect(config).catch(err => debug(err));
 

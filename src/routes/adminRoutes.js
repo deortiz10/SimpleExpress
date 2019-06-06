@@ -25,9 +25,13 @@ const books = [{
 function router(nav) {
   adminRouter.route('/').
     get((req, res) => {
-      const url = 'mongodb://localhost:2701';
-      const dbName = 'libraryApp';
-
+      // const url = 'mongodb://localhost:2701';
+      // const dbName = 'libraryApp';
+      (async function showObjects() {
+        const request = new sql.Request();
+        const result = await request.query('select * from books');
+        res.json(result);
+      }());
       // (async function mongo() {
       //   let client;
       //   try {
@@ -41,7 +45,7 @@ function router(nav) {
       //   }
       // client.close();
       // }());
-      res.send('inserting books');
+      //  res.send('inserting books');
     });
   return adminRouter;
 }
