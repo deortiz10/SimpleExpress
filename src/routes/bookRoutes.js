@@ -33,8 +33,7 @@ function router(nav) {
         title: 'Library',
         books: result.recordset
       });
-
-    }())
+    }());
   });
 
   bookRouter.route('/:id').all((req, res, next) =>{
